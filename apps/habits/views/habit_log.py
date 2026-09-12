@@ -1,3 +1,6 @@
+from typing import cast
+
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -17,14 +20,16 @@ class HabitLogListCreateView(APIView):
         return get_object_or_404(Habit, id=habit_id, user=user)
 
     def get(self, request: Request, habit_id: int) -> Response:
-        habit = self.get_habit(habit_id, request.user)
+        user = cast(User, request.user)
+        habit = self.get_habit(habit_id, user)
         repo = get_habit_log_repository()
         logs = repo.get_logs_for_habit(habit)
         serializer = HabitLogSerializer(logs, many=True)
         return Response(serializer.data)
 
     def post(self, request: Request, habit_id: int) -> Response:
-        habit = self.get_habit(habit_id, request.user)
+        user = cast(User, request.user)
+        habit = self.get_habit(habit_id, user)
         serializer = HabitLogSerializer(data=request.data, context={"habit": habit})
         serializer.is_valid(raise_exception=True)
         serializer.save(habit=habit)
@@ -38,7 +43,8 @@ class HabitLogDeleteView(APIView):
         return get_object_or_404(Habit, id=habit_id, user=user)
 
     def delete(self, request: Request, habit_id: int, log_id: int) -> Response:
-        habit = self.get_habit(habit_id, request.user)
+        user = cast(User, request.user)
+        habit = self.get_habit(habit_id, user)
         log = get_object_or_404(HabitLog, habit=habit, id=log_id)
         log.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

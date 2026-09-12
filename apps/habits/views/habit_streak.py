@@ -1,4 +1,7 @@
 from dataclasses import asdict
+from typing import cast
+
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +20,8 @@ class HabitStreakView(APIView):
         return get_object_or_404(Habit, id=habit_id, user=user)
 
     def get(self, request: Request, habit_id: int) -> Response:
-        habit = self.get_object(habit_id, request.user)
+        user = cast(User, request.user)
+        habit = self.get_object(habit_id, user)
         service = get_habit_log_service()
         stats = service.get_streak_stats(habit)
         data = asdict(stats)
@@ -31,13 +35,16 @@ class HabitMonthlyStatsView(APIView):
         return get_object_or_404(Habit, id=habit_id, user=user)
 
     def get(self, request: Request, habit_id: int) -> Response:
-        habit = self.get_object(habit_id, request.user)
+        user = cast(User, request.user)
+        habit = self.get_object(habit_id, user)
         try:
-            year = int(request.query_params.get("year"))
-            month = int(request.query_params.get("month"))
+            year = int(request.query_params.get("year", ""))
+            month = int(request.query_params.get("month", ""))
         except (TypeError, ValueError):
             return Response(
-                {"detail": "year and month query parameters are required and must be integers."},
+                {
+                    "detail": "year and month query parameters are required and must be integers."
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         service = get_habit_monthly_stats_service()
