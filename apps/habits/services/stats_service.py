@@ -23,7 +23,7 @@ class HabitMonthlyStatsService:
         self.repo = repo
 
     def calculate_monthly_stats(
-            self, habit: Habit, year: int, month: int
+        self, habit: Habit, year: int, month: int
     ) -> HabitMonthlyStats:
         today = timezone.localdate()
         is_current_month = today.year == year and today.month == month

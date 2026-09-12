@@ -4,12 +4,8 @@ from apps.habits.services.streak_service import HabitLogService
 
 
 def get_habit_log_service() -> HabitLogService:
-    return HabitLogService(
-        repo=HabitLogRepository()
-    )
+    return HabitLogService(repo=HabitLogRepository())
 
 
 def get_habit_monthly_stats_service() -> HabitMonthlyStatsService:
-    return HabitMonthlyStatsService(
-        repo=HabitLogRepository()
-    )
+    return HabitMonthlyStatsService(repo=HabitLogRepository())
