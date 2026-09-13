@@ -9,8 +9,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.habits.models import Habit
-from apps.habits.schemas.habit import list_habits_schema, create_habit_schema, get_habit_schema, update_habit_schema, \
-    delete_habit_schema
+from apps.habits.schemas.habit import (
+    create_habit_schema,
+    delete_habit_schema,
+    get_habit_schema,
+    list_habits_schema,
+    update_habit_schema,
+)
 from apps.habits.serializers import HabitSerializer
 
 

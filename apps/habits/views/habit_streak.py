@@ -11,7 +11,10 @@ from rest_framework.views import APIView
 
 from apps.habits.container import get_habit_log_service, get_habit_monthly_stats_service
 from apps.habits.models import Habit
-from apps.habits.schemas.habit_log import get_habit_streak_schema, get_habit_monthly_stats_schema
+from apps.habits.schemas.habit_log import (
+    get_habit_monthly_stats_schema,
+    get_habit_streak_schema,
+)
 
 
 class HabitStreakView(APIView):
