@@ -1,0 +1,79 @@
+[project]
+name = "habit-tracer"
+version = "0.1.0"
+description = "Habit tracking API built with Django and Django REST Framework"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "django>=6.1.1",
+    "django-cors-headers>=4.9.0",
+    "django-filter>=26.1",
+    "django-stubs>=6.1.0",
+    "djangorestframework>=3.18.0",
+    "djangorestframework-simplejwt>=5.5.1",
+    "djangorestframework-stubs>=3.18.1",
+    "drf-spectacular>=0.30.0",
+    "gunicorn>=26.2.0",
+    "psycopg2-binary>=2.9.12",
+    "python-dotenv>=1.2.3",
+]
+
+[dependency-groups]
+dev = [
+    "deptry>=0.23.0",
+    "django-stubs[compatible-mypy]>=5.2.0",
+    "mypy>=1.17.0",
+    "pytest>=8.0",
+    "pytest-django>=4.9",
+    "ruff>=0.12.0",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = [
+    "tests.py",
+    "test_*.py",
+    "*_tests.py",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "migrations",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+]
+
+ignore = [
+    "E501",
+    "F403",
+    "F405",
+]
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.12"
+plugins = [
+    "mypy_django_plugin.main",
+]
+
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings.dev"

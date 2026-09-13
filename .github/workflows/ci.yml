@@ -1,0 +1,74 @@
+name: Django CI
+
+on:
+  push:
+    branches:
+      - "**"
+
+  pull_request:
+    branches:
+      - "**"
+
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+
+        env:
+          POSTGRES_DB: mydb
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypass
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U myuser -d mydb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.dev
+      DJANGO_ENV: dev
+      SECRET_KEY: ci-secret-key
+      DATABASE_URL: postgres://myuser:mypass@localhost:5432/mydb
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Run lint
+        run: uv run ruff check .
+
+      - name: Run typecheck
+        run: uv run mypy .
+
+      - name: Run tests
+        run: uv run python manage.py test
+
+#      - name: Run dependency check
+#        run: uv run deptry .
+
+      - name: Check migrations
+        run: uv run python manage.py makemigrations --check --dry-run
