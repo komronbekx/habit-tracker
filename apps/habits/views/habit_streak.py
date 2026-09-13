@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 
 from apps.habits.container import get_habit_log_service, get_habit_monthly_stats_service
 from apps.habits.models import Habit
+from apps.habits.schemas.habit_log import get_habit_streak_schema, get_habit_monthly_stats_schema
 
 
 class HabitStreakView(APIView):
@@ -19,6 +20,7 @@ class HabitStreakView(APIView):
     def get_object(self, habit_id: int, user) -> Habit:
         return get_object_or_404(Habit, id=habit_id, user=user)
 
+    @get_habit_streak_schema
     def get(self, request: Request, habit_id: int) -> Response:
         user = cast(User, request.user)
         habit = self.get_object(habit_id, user)
@@ -34,6 +36,7 @@ class HabitMonthlyStatsView(APIView):
     def get_object(self, habit_id: int, user) -> Habit:
         return get_object_or_404(Habit, id=habit_id, user=user)
 
+    @get_habit_monthly_stats_schema
     def get(self, request: Request, habit_id: int) -> Response:
         user = cast(User, request.user)
         habit = self.get_object(habit_id, user)

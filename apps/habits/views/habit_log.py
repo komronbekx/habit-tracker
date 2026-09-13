@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 from apps.habits.container import get_habit_log_repository
 from apps.habits.models import Habit, HabitLog
+from apps.habits.schemas.habit_log import list_habit_logs_schema, create_habit_log_schema, delete_habit_log_schema
 from apps.habits.serializers import HabitLogSerializer
 
 
@@ -19,6 +20,7 @@ class HabitLogListCreateView(APIView):
     def get_habit(self, habit_id: int, user) -> Habit:
         return get_object_or_404(Habit, id=habit_id, user=user)
 
+    @list_habit_logs_schema
     def get(self, request: Request, habit_id: int) -> Response:
         user = cast(User, request.user)
         habit = self.get_habit(habit_id, user)
@@ -27,6 +29,7 @@ class HabitLogListCreateView(APIView):
         serializer = HabitLogSerializer(logs, many=True)
         return Response(serializer.data)
 
+    @create_habit_log_schema
     def post(self, request: Request, habit_id: int) -> Response:
         user = cast(User, request.user)
         habit = self.get_habit(habit_id, user)
@@ -42,6 +45,7 @@ class HabitLogDeleteView(APIView):
     def get_habit(self, habit_id: int, user) -> Habit:
         return get_object_or_404(Habit, id=habit_id, user=user)
 
+    @delete_habit_log_schema
     def delete(self, request: Request, habit_id: int, log_id: int) -> Response:
         user = cast(User, request.user)
         habit = self.get_habit(habit_id, user)
