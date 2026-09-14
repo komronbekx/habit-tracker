@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     # Project apps
     "apps.core.apps.CoreConfig",
     "apps.habits.apps.HabitsConfig",
+    "apps.users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
