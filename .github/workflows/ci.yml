@@ -46,7 +46,7 @@ jobs:
         run: uv run mypy .
 
       - name: Run tests
-        run: uv run pytest
+        run: uv run python manage.py test
 
 #      - name: Run dependency check
 #        run: uv run deptry .
